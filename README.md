@@ -1,4 +1,4 @@
-<img align="right" width="250" src="assets/tungsten_logo.png" alt="tungsten logo" />
+<img align="right" width="200" src="assets/tungsten_logo.png" alt="tungsten logo" />
 <h1 align="center">Tungsten</h1>
 <br/>
 <p><b>Another command line tool to handle Roblox assets similar to Tarmac and Asphalt.</b></p>
