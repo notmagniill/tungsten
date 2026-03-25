@@ -8,6 +8,13 @@ readme = "README.md"
 homepage = "https://github.com/notmagniill/tungsten/"
 repository = "https://github.com/notmagniill/tungsten/"
 
+exclude = [
+    "assets",
+    "assets/**",
+    "examples",
+    "examples/**",
+]
+
 [dependencies]
 anyhow = "1.0.102"
 clap = { version = "4.6.0", features = ["derive"] }
@@ -25,3 +32,7 @@ toml = "1.1.0"
 
 [dev-dependencies]
 tokio = { version = "1.50.0", features = ["full"] }
+
+[[bin]]
+name = "tungsten"
+path = "src/main.rs"

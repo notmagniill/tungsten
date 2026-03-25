@@ -72,7 +72,7 @@ impl RobloxClient {
         let mut delay = Duration::from_secs(1);
         const MAX_POLLS: u32 = 10;
     
-        for attempt in 0..MAX_POLLS {
+        for _attempt in 0..MAX_POLLS {
             tokio::time::sleep(delay).await;
     
             let op_id = operation_id.to_string();
