@@ -14,19 +14,23 @@ jobs:
         include:
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact: tungsten.exe
+            os-name: windows
+            arch: x86_64
 
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            artifact: tungsten
+            os-name: linux
+            arch: x86_64
 
           - os: macos-latest
             target: x86_64-apple-darwin
-            artifact: tungsten
+            os-name: macos
+            arch: x86_64
 
           - os: macos-latest
             target: aarch64-apple-darwin
-            artifact: tungsten
+            os-name: macos
+            arch: aarch64
 
     steps:
       - name: Checkout
@@ -40,21 +44,30 @@ jobs:
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Rename binary
+      - name: Package (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          $version = "${{ github.ref_name }}" -replace '^v', ''
+          $zipName = "tungsten-$version-${{ matrix.os-name }}-${{ matrix.arch }}.zip"
+          cd target/${{ matrix.target }}/release
+          Compress-Archive -Path tungsten.exe -DestinationPath "../../../$zipName"
+
+      - name: Package (Unix)
+        if: matrix.os != 'windows-latest'
         shell: bash
         run: |
+          version="${{ github.ref_name }}"
+          version="${version#v}"
+          zip_name="tungsten-${version}-${{ matrix.os-name }}-${{ matrix.arch }}.zip"
           cd target/${{ matrix.target }}/release
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            cp tungsten.exe ../../../tungsten-${{ matrix.target }}.exe
-          else
-            cp tungsten ../../../tungsten-${{ matrix.target }}
-          fi
+          zip "../../../${zip_name}" tungsten
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: tungsten-${{ matrix.target }}
-          path: tungsten-${{ matrix.target }}*
+          name: tungsten-${{ matrix.os-name }}-${{ matrix.arch }}
+          path: tungsten-*.zip
 
   release:
     name: Publish Release
@@ -66,13 +79,11 @@ jobs:
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            tungsten-x86_64-pc-windows-msvc/tungsten-x86_64-pc-windows-msvc.exe
-            tungsten-x86_64-unknown-linux-gnu/tungsten-x86_64-unknown-linux-gnu
-            tungsten-x86_64-apple-darwin/tungsten-x86_64-apple-darwin
-            tungsten-aarch64-apple-darwin/tungsten-aarch64-apple-darwin
+          files: tungsten-*.zip
           generate_release_notes: true
