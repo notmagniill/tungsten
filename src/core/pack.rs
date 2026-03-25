@@ -2,6 +2,7 @@ use anyhow::{Result, Context};
 use image::{RgbaImage, ImageBuffer, GenericImage};
 use std::path::PathBuf;
 use crunch::{Item, Rotation};
+use crate::log;
 
 #[derive(Clone)]
 pub struct InputImage {
