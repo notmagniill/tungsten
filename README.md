@@ -1,3 +1,4 @@
+<h1 align="center">Tungsten is moving to a new repository in favor to a more Roblox focused environment, you can find it <a href="https://github.com/pwnwrkz/tungsten">here</a>.</h1>
 <img align="right" width="200" src="assets/tungsten_logo.png" alt="tungsten logo" />
 <h1 align="center">Tungsten</h1>
 <br/>
